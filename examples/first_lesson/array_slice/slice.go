@@ -29,6 +29,8 @@ func main() {
 	// SubSlice()
 
 	//shareArr()
+
+	ShareSlice()
 }
 
 func SubSlice() {
