@@ -1,2 +1,2 @@
-# toy-web
-用于极客时间go基础课程
+# Tiger-web
+用于go基础学习记录
