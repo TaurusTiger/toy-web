@@ -27,16 +27,16 @@ func (h Haojiahuo) Clear() bool {
 	return h == 0
 }
 
-func main() {
-	rwx := &Role{"任我行", "吸星大法", 8, 10}
-	rwx.Kungf()
-
-	var h Haojiahuo
-	fmt.Println(h.Clear())
-	fmt.Println(h.Add(2))
-	fmt.Println(h.Clear())
-	fmt.Println(h.Add(6))
-	fmt.Println(h.Clear())
-	fmt.Println(h)
-
-}
+//func main() {
+//	rwx := &Role{"任我行", "吸星大法", 8, 10}
+//	rwx.Kungf()
+//
+//	var h Haojiahuo
+//	fmt.Println(h.Clear())
+//	fmt.Println(h.Add(2))
+//	fmt.Println(h.Clear())
+//	fmt.Println(h.Add(6))
+//	fmt.Println(h.Clear())
+//	fmt.Println(h)
+//
+//}

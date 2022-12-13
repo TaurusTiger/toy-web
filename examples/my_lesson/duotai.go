@@ -2,17 +2,17 @@ package main
 
 import "fmt"
 
-func main() {
-	h := &Haojiahuo2{name: "好家伙"}
-	fmt.Println(h.name)
-
-	l := Laolitou2{name: "老李头"}
-	fmt.Println(l.name)
-
-	testInterface(&l)
-
-	h.PlayGame()
-}
+//func main() {
+//	h := &Haojiahuo2{name: "好家伙"}
+//	fmt.Println(h.name)
+//
+//	l := Laolitou2{name: "老李头"}
+//	fmt.Println(l.name)
+//
+//	testInterface(&l)
+//
+//	h.PlayGame()
+//}
 
 func testInterface(k Kongfu) {
 	k.Toad()

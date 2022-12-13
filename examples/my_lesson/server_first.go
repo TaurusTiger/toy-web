@@ -1,9 +1,7 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 )
@@ -35,21 +33,43 @@ func NewHttpServer(name string) Server {
 
 func SignUp(w http.ResponseWriter, r *http.Request) {
 	req := &signUpReq{}
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		fmt.Fprintf(w, "read body failed: %v", err)
-		// 要返回掉，不然就会继续执行后面的代码
-		return
-	}
-	err = json.Unmarshal(body, req)
-	if err != nil {
-		fmt.Fprintf(w, "deserialized failed: %v", err)
-		// 要返回掉，不然就会继续执行后面的代码
-		return
+	//body, err := io.ReadAll(r.Body)
+	//if err != nil {
+	//	fmt.Fprintf(w, "read body failed: %v", err)
+	//	// 要返回掉，不然就会继续执行后面的代码
+	//	return
+	//}
+	//err = json.Unmarshal(body, req)
+	////if err != nil {
+	////	fmt.Fprintf(w, "deserialized failed: %v", err)
+	////	// 要返回掉，不然就会继续执行后面的代码
+	////	return
+	////}
+
+	ctx := &Context{
+		W: w,
+		R: r,
 	}
 
+	err := ctx.ReadJson(req)
+
+	if err != nil {
+		fmt.Fprintf(w, "err: %v", err)
+	}
+
+	//
+	resp := &commonResponse{
+		Data: 123,
+	}
+	err = ctx.WriteJson(http.StatusOK, resp)
+	if err != nil {
+		fmt.Printf("写入响应失败：%v", err)
+	}
+
+	//respJson, errr := json.Marshal(resp)
 	// 返回一个虚拟的 user id 表示注册成功了
-	fmt.Fprintf(w, "%d", err)
+	//fmt.Fprintf(w, "%d", err)
+	//fmt.Fprintf(w, string(respJson))
 }
 
 type signUpReq struct {
