@@ -7,19 +7,35 @@ import (
 )
 
 type Server interface {
-	Route(pattern string, handlerFunc http.HandlerFunc)
+	//Route(pattern string, handlerFunc http.HandlerFunc)
+	Routable
 	Start(address string) error
+	RouteBasedOnMap(method string, pattern string, handlerFunc func(ctx *Context))
 }
 
 type sdkHttpServer struct {
-	Name string
+	Name    string
+	handler *HandlerBasedOnMap
 }
 
-func (s *sdkHttpServer) Route(pattern string, handlerFunc http.HandlerFunc) {
-	http.HandleFunc(pattern, handlerFunc)
+//func (s *sdkHttpServer) Route(pattern string, handlerFunc http.HandlerFunc) {
+func (s *sdkHttpServer) Route(method string, pattern string, handleFunc func(ctx *Context)) {
+	//http.HandleFunc(pattern, handlerFunc)
+	http.Handle(pattern, handleFunc)
+}
+
+func (s *sdkHttpServer) RouteBasedOnMap(
+	method string,
+	pattern string,
+	handlerFunc func(ctx *Context),
+) {
+	key := s.handler.Key(method, pattern)
+	// 不建议这样的a.b.c的调用，太强耦合了。
+	s.handler.handlers[key] = handlerFunc
 }
 
 // Route2 这里就比较抽象处理
+// 这里的调用http.HandleFunc()，第二个参数，使用了匿名函数——符合http.HandlerFunc这个函数类型
 func (s *sdkHttpServer) Route2(pattern string, handleFunc func(ctx *Context)) {
 	http.HandleFunc(pattern, func(writer http.ResponseWriter, request *http.Request) {
 		// 下面这段直接重新封装到了NewContext里了
@@ -40,7 +56,12 @@ func (s *sdkHttpServer) Start(address string) error {
 	return http.ListenAndServe(address, nil)
 }
 
-type Hander map[string][]string
+func (s *sdkHttpServer) StartBasedOnMap(address string) error {
+	http.Handle("/", s.handler)
+	return http.ListenAndServe(address, nil)
+}
+
+type Handler map[string][]string
 
 func NewHttpServer(name string) Server {
 	return &sdkHttpServer{
@@ -108,8 +129,8 @@ func home(w http.ResponseWriter, r *http.Request) {
 func main() {
 	server := NewHttpServer("test-server")
 
-	server.Route("/", home)
-	server.Route("/user/signup", SignUp)
+	server.RouteBasedOnMap(http.MethodGet, "/", home)
+	server.RouteBasedOnMap(http.MethodGet, "/user/signup", SignUp)
 
 	log.Fatal(server.Start(":8800"))
 }
