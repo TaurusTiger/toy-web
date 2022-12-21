@@ -19,6 +19,23 @@ func (s *sdkHttpServer) Route(pattern string, handlerFunc http.HandlerFunc) {
 	http.HandleFunc(pattern, handlerFunc)
 }
 
+// Route2 这里就比较抽象处理
+func (s *sdkHttpServer) Route2(pattern string, handleFunc func(ctx *Context)) {
+	http.HandleFunc(pattern, func(writer http.ResponseWriter, request *http.Request) {
+		// 下面这段直接重新封装到了NewContext里了
+		//ctx := &Context{
+		//	R: request,
+		//	W: writer,
+		//}
+		ctx := NewContext(writer, request)
+		handleFunc(ctx)
+	})
+}
+
+func NewContext(writer http.ResponseWriter, request *http.Request) *Context {
+	return &Context{R: request, W: writer}
+}
+
 func (s *sdkHttpServer) Start(address string) error {
 	return http.ListenAndServe(address, nil)
 }
