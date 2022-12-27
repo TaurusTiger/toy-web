@@ -38,3 +38,7 @@ func (c *Context) WriteJson(code int, resp interface{}) error {
 	_, err = c.W.Write(respJson)
 	return err
 }
+
+func (c *Context) OkJson(resp interface{}) error {
+	return c.WriteJson(http.StatusOK, resp)
+}
