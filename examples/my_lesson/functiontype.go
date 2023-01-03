@@ -43,6 +43,12 @@ func main() {
 	*/
 	fmt.Println(Greeting(english).say("interface"))
 
-	g := Greeting(french)
-	fmt.Println(g("interface"))
+	/*
+		这里g1是实例对象，say函数用的g(n)实际调用的是具体实例对象的方法体，比如english
+	*/
+	var g1 Greeting = english
+	fmt.Println(g1.say("var interface"))
+
+	g2 := Greeting(french)
+	fmt.Println(g2("interface"))
 }
