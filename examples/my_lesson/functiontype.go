@@ -39,7 +39,7 @@ func french(name string) string {
 
 func main() {
 	/*
-		这里要注意：这里不是接口，需要类型转换的
+		这里要注意：这里不是接口，需要类型转换的，转换后才可以使用say这个方法
 	*/
 	fmt.Println(Greeting(english).say("interface"))
 
